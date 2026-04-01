@@ -390,33 +390,50 @@ Phase 5 -> Refusal logic
 
 ### 1. Install Modified GSD
 
-From your modified repo:
+Recommended: install directly into your target project from this modified clone.
+
+```bash
+cd /path/to/your/target-project
+node "/path/to/your/get-shit-done/bin/install.js" --cursor --local
+```
+
+This writes to `<target-project>/.cursor/skills/...` using the modified files from this repo clone.
+
+Then verify inside Cursor chat (while opened in the target project):
+
+```text
+/gsd:help
+```
+
+### 2. Alternative (manual copy flow)
+
+From this modified repo, install locally:
 
 ```bash
 node bin/install.js --cursor --local
 ```
 
-### 2. Create a New Project
+Then copy `.cursor` into your target project.
+
+### 3. Create or Open Your Project
 
 ```bash
 mkdir my-app
 cd my-app
 ```
 
-Copy `.cursor` folder into your project.
-
-### 3. Run in Cursor Chat
+### 4. Run in Cursor Chat
 
 ```text
-gsd-new-project
+/gsd:new-project
 ```
 
-### 4. Continue Workflow
+### 5. Continue Workflow
 
 ```text
-/gsd-discuss-phase 1
-/gsd-plan-phase 1
-/gsd-execute-phase 1
+/gsd:discuss-phase 1
+/gsd:plan-phase 1
+/gsd:execute-phase 1
 ```
 
 ---
