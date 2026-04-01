@@ -15,6 +15,7 @@ describe('workflow.discuss_mode config', () => {
       fs.readFileSync(path.join(__dirname, '..', 'get-shit-done', 'templates', 'config.json'), 'utf8')
     );
     assert.strictEqual(template.workflow.discuss_mode, 'discuss');
+    assert.strictEqual(template.workflow.workflow_mode, 'feature-sliced');
   });
 
   test('discuss-phase command references both workflow files', () => {
@@ -97,6 +98,7 @@ describe('workflow.discuss_mode config', () => {
       path.join(__dirname, '..', 'get-shit-done', 'workflows', 'plan-phase.md'), 'utf8'
     );
     assert.ok(planPhase.includes('workflow.discuss_mode'), 'should reference config key');
+    assert.ok(planPhase.includes('workflow.workflow_mode'), 'should reference workflow mode key');
     assert.ok(planPhase.includes('assumptions mode'), 'should mention assumptions mode');
   });
 

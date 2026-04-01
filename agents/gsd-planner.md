@@ -309,27 +309,40 @@ Wave analysis:
   Wave 4: F (checkpoint, depends on Wave 3)
 ```
 
-## Vertical Slices vs Horizontal Layers
+## Feature-Sliced Workflow (DEFAULT)
 
-**Vertical slices (PREFER):**
+**Feature slices (REQUIRED by default):**
 ```
-Plan 01: User feature (model + API + UI)
-Plan 02: Product feature (model + API + UI)
-Plan 03: Order feature (model + API + UI)
+Plan 01: Chat feature (DB + API + UI + integration + end-to-end test)
+Plan 02: Billing feature (DB + API + UI + integration + end-to-end test)
+Plan 03: Notifications feature (DB + API + UI + integration + end-to-end test)
 ```
-Result: All three run parallel (Wave 1)
+Result: Each plan is independently usable and verifiable.
 
-**Horizontal layers (AVOID):**
-```
-Plan 01: Create User model, Product model, Order model
-Plan 02: Create User API, Product API, Order API
-Plan 03: Create User UI, Product UI, Order UI
-```
-Result: Fully sequential (02 needs 01, 03 needs 02)
+Every feature plan must include all five slices:
+1. Backend (APIs / services)
+2. Database (schemas / tables / persistence)
+3. UI (components / screens)
+4. Integration (API wiring from UI to backend)
+5. Test (end-to-end validation of usable behavior)
 
-**When vertical slices work:** Features are independent, self-contained, no cross-feature dependencies.
+**Horizontal layers (FORBIDDEN unless workflow_mode=default):**
+```
+Plan 01: Create all database models
+Plan 02: Create all API endpoints
+Plan 03: Create all UI components
+```
+Result: unusable intermediate phases and delayed validation.
 
-**When horizontal layers necessary:** Shared foundation required (auth before protected features), genuine type dependencies, infrastructure setup.
+**Extension phases (allowed):**
+- Extend an existing capability without rebuilding it.
+- Reuse the same routes, tables, handlers, and service pipeline unless a migration is explicitly required.
+- Add behavior via pluggable components (example progression):
+  - Phase 3: chat with stub response generator
+  - Phase 4: same chat pipeline + retrieval/LLM generator plugin
+  - Phase 5: same chat pipeline + refusal policy layer
+
+**Single pipeline rule:** Never create duplicate handlers/services for the same capability across phases.
 
 ## File Ownership for Parallel Execution
 
@@ -365,7 +378,7 @@ Plans should complete within ~50% context (not 80%). No context anxiety, quality
 
 **ALWAYS split if:**
 - More than 3 tasks
-- Multiple subsystems (DB + API + UI = separate plans)
+- Multiple independent features can each be delivered end-to-end
 - Any task with >5 file modifications
 - Checkpoint + implementation in same plan
 - Discovery + implementation in same plan
@@ -1148,7 +1161,7 @@ Map dependencies explicitly before grouping into plans. Record needs/creates/has
 
 Identify parallelization: No deps = Wave 1, depends only on Wave 1 = Wave 2, shared file conflict = sequential.
 
-Prefer vertical slices over horizontal layers.
+Default to feature-sliced plans that are end-to-end usable. Each plan should cover backend + database + UI + integration + end-to-end test, unless it's an explicit extension phase that reuses an existing pipeline.
 </step>
 
 <step name="assign_waves">

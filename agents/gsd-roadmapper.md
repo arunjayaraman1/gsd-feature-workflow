@@ -182,6 +182,20 @@ Bad boundaries:
 - Partial features (half of auth)
 - Artificial splits to hit a number
 
+**Phase type rule (MANDATORY):**
+- Every phase must be either:
+  1) **End-to-end usable** (feature slice), or
+  2) **Strict extension** of a previous phase's capability.
+- Extension phases must reuse existing routes/tables/handlers/services unless a migration is explicitly declared.
+- Do not create duplicate systems when extending.
+
+**Extension example (same pipeline, pluggable components):**
+```
+Phase 3: Chat system (UI + API + DB + stub response generator)
+Phase 4: Extend chat with retrieval + LLM generator (same routes/tables/handler)
+Phase 5: Extend chat with refusal policy layer (same pipeline, new guardrail plugin)
+```
+
 **Step 4: Assign Requirements**
 Map every v1 requirement to exactly one phase.
 Track coverage as you go.
@@ -645,6 +659,10 @@ When unable to proceed:
 - Bad: AUTH-01 in Phase 2 AND Phase 3
 - Good: AUTH-01 in Phase 2 only
 
+**Don't duplicate implementation pipelines across phases:**
+- Bad: Rebuild chat route/service/table in each phase
+- Good: Keep one chat handler/service/table and extend behavior through pluggable components
+
 </anti_patterns>
 
 <success_criteria>
@@ -657,9 +675,11 @@ Roadmap is complete when:
 - [ ] Phases derived from requirements (not imposed)
 - [ ] Granularity calibration applied
 - [ ] Dependencies between phases identified
+- [ ] Every phase classified as end-to-end usable OR strict extension
 - [ ] Success criteria derived for each phase (2-5 observable behaviors)
 - [ ] Success criteria cross-checked against requirements (gaps resolved)
 - [ ] 100% requirement coverage validated (no orphans)
+- [ ] No duplicate system/pipeline introduced across phases
 - [ ] ROADMAP.md structure complete
 - [ ] STATE.md structure complete
 - [ ] REQUIREMENTS.md traceability update prepared

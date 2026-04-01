@@ -32,6 +32,7 @@ GSD stores project settings in `.planning/config.json`. Created during `/gsd:new
     "node_repair_budget": 2,
     "research_before_questions": false,
     "discuss_mode": "discuss",
+    "workflow_mode": "feature-sliced",
     "skip_discuss": false,
     "text_mode": false
   },
@@ -102,6 +103,7 @@ All workflow toggles follow the **absent = enabled** pattern. If a key is missin
 | `workflow.node_repair_budget` | number | `2` | Max repair attempts per failed task |
 | `workflow.research_before_questions` | boolean | `false` | Run research before discussion questions instead of after |
 | `workflow.discuss_mode` | string | `'discuss'` | Controls how `/gsd:discuss-phase` gathers context. `'discuss'` (default) asks questions one-by-one. `'assumptions'` reads the codebase first, generates structured assumptions with confidence levels, and only asks you to correct what's wrong. Added in v1.28 |
+| `workflow.workflow_mode` | string | `'feature-sliced'` | Planning style default. `'feature-sliced'` enforces end-to-end feature slices and extension-phase reuse of existing pipelines. `'default'` keeps legacy behavior. |
 | `workflow.skip_discuss` | boolean | `false` | When `true`, `/gsd:autonomous` bypasses the discuss-phase entirely, writing minimal CONTEXT.md from the ROADMAP phase goal. Useful for projects where developer preferences are fully captured in PROJECT.md/REQUIREMENTS.md. Added in v1.28 |
 | `workflow.text_mode` | boolean | `false` | Replaces AskUserQuestion TUI menus with plain-text numbered lists. Required for Claude Code remote sessions (`/rc` mode) where TUI menus don't render. Can also be set per-session with `--text` flag on discuss-phase. Added in v1.28 |
 

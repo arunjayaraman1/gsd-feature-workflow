@@ -29,6 +29,22 @@ The phase boundary comes from the roadmap and is FIXED. Discussion clarifies HOW
 When analysis suggests scope creep: note it in "Deferred Ideas" section, do not act on it.
 </scope_guardrail>
 
+<feature_sliced_guardrail>
+Workflow mode source: `workflow.workflow_mode` (`feature-sliced` default, `default` for legacy behavior).
+
+Capture decisions in feature-sliced form by default:
+- Backend/API behavior
+- Database/persistence behavior
+- UI behavior
+- Integration/wiring behavior
+- End-to-end validation behavior
+
+For extension phases, explicitly capture:
+- Existing route/table/handler/service pipeline being reused
+- Pluggable component being added or swapped
+- Confirmation that no duplicate system is created
+</feature_sliced_guardrail>
+
 <process>
 
 <step name="initialize" priority="first">
@@ -78,6 +94,18 @@ Create CONTEXT.md capturing decisions made:
 [Clear statement of what this phase delivers]
 
 ## Implementation Decisions
+### Feature Slice Coverage
+- Backend: [...]
+- Database: [...]
+- UI: [...]
+- Integration: [...]
+- E2E Validation: [...]
+
+### Extension Strategy (if applicable)
+- Base pipeline reused: [...]
+- Pluggable component: [...]
+- No-duplication check: [...]
+
 ### [Category]
 - **D-01:** [Decision] — Rationale: [why]
 

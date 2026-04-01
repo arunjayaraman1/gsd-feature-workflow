@@ -28,6 +28,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 ### Phase 1: [Name]
 **Goal**: [What this phase delivers]
+**Phase Type**: [Feature | Extension]
 **Depends on**: Nothing (first phase)
 **Requirements**: [REQ-01, REQ-02, REQ-03]  <!-- brackets optional, parser handles both formats -->
 **Success Criteria** (what must be TRUE):
@@ -43,6 +44,7 @@ Plans:
 
 ### Phase 2: [Name]
 **Goal**: [What this phase delivers]
+**Phase Type**: [Feature | Extension]
 **Depends on**: Phase 1
 **Requirements**: [REQ-04, REQ-05]
 **Success Criteria** (what must be TRUE):
@@ -56,6 +58,7 @@ Plans:
 
 ### Phase 2.1: Critical Fix (INSERTED)
 **Goal**: [Urgent work inserted between phases]
+**Phase Type**: [Feature | Extension]
 **Depends on**: Phase 2
 **Success Criteria** (what must be TRUE):
   1. [What the fix achieves]
@@ -66,6 +69,7 @@ Plans:
 
 ### Phase 3: [Name]
 **Goal**: [What this phase delivers]
+**Phase Type**: [Feature | Extension]
 **Depends on**: Phase 2
 **Requirements**: [REQ-06, REQ-07, REQ-08]
 **Success Criteria** (what must be TRUE):
@@ -80,6 +84,7 @@ Plans:
 
 ### Phase 4: [Name]
 **Goal**: [What this phase delivers]
+**Phase Type**: [Feature | Extension]
 **Depends on**: Phase 3
 **Requirements**: [REQ-09, REQ-10]
 **Success Criteria** (what must be TRUE):
@@ -106,12 +111,19 @@ Phases execute in numeric order: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
 <guidelines>
 **Initial planning (v1.0):**
 - Phase count depends on granularity setting (coarse: 3-5, standard: 5-8, fine: 8-12)
-- Each phase delivers something coherent
-- Phases can have 1+ plans (split if >3 tasks or multiple subsystems)
+- Each phase must be either end-to-end usable (feature slice) or a strict extension of a previous phase
+- Feature phases should be usable end-to-end (backend + database + UI + integration + end-to-end validation)
+- Extension phases must reuse existing routes/tables/handlers/services (no duplicate systems)
+- Phases can have 1+ plans (split by independent features, not by backend/frontend/database layer lists)
 - Plans use naming: {phase}-{plan}-PLAN.md (e.g., 01-02-PLAN.md)
 - No time estimates (this isn't enterprise PM)
 - Progress table updated by execute workflow
 - Plan count can be "TBD" initially, refined during planning
+
+**Extension pattern example:**
+- Phase 3: Chat (UI + API + DB + stub response)
+- Phase 4: Extend same chat with retrieval + LLM (same routes/tables/pipeline)
+- Phase 5: Extend same chat with refusal logic layer
 
 **Success criteria:**
 - 2-5 observable behaviors per phase (from user's perspective)

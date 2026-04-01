@@ -208,6 +208,277 @@ If you prefer not to use that flag, add this to your project's `.claude/settings
 
 ---
 
+## Feature-Sliced GSD (Modified Workflow)
+
+## Overview
+
+This repository contains a modified version of the **Get Shit Done (GSD)** workflow.
+
+The goal of this modification is to shift GSD from a **layer-based execution model** (backend -> DB -> UI) to a **feature-based (vertical slicing) execution model**, while still retaining GSD's original **phase-based structure for planning and orchestration**.
+
+---
+
+## Difference: Native npm GSD vs Our Modified GSD
+
+| Aspect | Native npm package (`get-shit-done-cc`) | Our modified GSD (this repo) |
+| --- | --- | --- |
+| Execution style | Often used with layer-based progression | Backend phases run feature-by-feature (vertical slices) |
+| Phase behavior | Standard upstream planning and execution defaults | Phases remain orchestration units, but execution is requirement/feature sliced |
+| Delivery pattern | Backend/UI/DB can drift across separate implementation steps | Each feature is completed end-to-end before starting the next |
+| Purpose | Install official upstream workflow | Use our customized workflow behavior and prompts |
+
+---
+
+## Key Idea
+
+> **Phases organize work. Features execute work.**
+
+- **Phases** -> High-level roadmap and grouping
+- **Features (requirements)** -> Units of execution
+- **Each feature is built end-to-end**
+
+---
+
+## Why This Change?
+
+### Problem in Original GSD
+
+- Backend, DB, and UI were often planned separately
+- Led to:
+  - Misalignment between frontend and backend
+  - Late integration issues
+  - Harder reviews
+
+### Solution
+
+We enforce **vertical slicing**:
+
+> Each feature is implemented completely before moving to the next.
+
+---
+
+## Modified Workflow
+
+### 1. Requirements (Atomic Units)
+
+Each requirement represents a feature:
+
+```text
+NOTE-01 -> Create note
+NOTE-02 -> List notes
+VAL-01  -> Validation
+```
+
+### 2. Phase (Orchestration Layer)
+
+Phases group related requirements:
+
+```text
+Phase 1 -> Notes Core Features
+```
+
+### 3. Feature Slice (Execution Unit)
+
+Each requirement is implemented as a full-stack slice:
+
+```text
+Feature: Create Note
+
+Backend:
+- POST /api/notes
+
+Database:
+- notes collection (title, content, createdAt)
+
+UI:
+- Note input form
+
+Integration:
+- Form -> API call
+
+Test:
+- Note is saved and retrievable
+```
+
+### 4. Execution
+
+Execution still uses GSD commands:
+
+```bash
+/gsd:execute-phase 1
+```
+
+But internally:
+
+```text
+Complete NOTE-01 fully
+Then NOTE-02 fully
+Then VAL-01 fully
+```
+
+---
+
+## Execution Rules
+
+- Do **not** implement backend, UI, or DB separately across features
+- Each feature must include:
+  - Backend
+  - Database
+  - UI
+  - Integration
+  - Test
+- Complete one feature before starting another
+
+---
+
+## Phase Types
+
+Each phase must be:
+
+### 1. End-to-End Phase
+
+A fully usable feature set
+
+OR
+
+### 2. Extension Phase
+
+Extends an existing system without duplication
+
+Example:
+
+```text
+Phase 3 -> Chat system (UI + API + DB)
+Phase 4 -> Add retrieval + LLM (extends same chat system)
+Phase 5 -> Add refusal logic
+```
+
+---
+
+## Architecture Principles
+
+### Single Pipeline Rule
+
+- Shared systems (e.g., chat, notes) must not be duplicated
+- Future phases must extend existing handlers/services
+
+### Pluggable Logic
+
+Example (chat system):
+
+```text
+Phase 3 -> Stub response generator
+Phase 4 -> Retrieval + LLM
+Phase 5 -> Refusal logic
+```
+
+---
+
+## Folder Structure (GSD)
+
+```text
+.planning/
+  PROJECT.md
+  REQUIREMENTS.md
+  ROADMAP.md
+  phases/
+```
+
+---
+
+## How to Use (with Cursor)
+
+### 1. Install Modified GSD
+
+From your modified repo:
+
+```bash
+node bin/install.js --cursor --local
+```
+
+### 2. Create a New Project
+
+```bash
+mkdir my-app
+cd my-app
+```
+
+Copy `.cursor` folder into your project.
+
+### 3. Run in Cursor Chat
+
+```text
+gsd-new-project
+```
+
+### 4. Continue Workflow
+
+```text
+/gsd-discuss-phase 1
+/gsd-plan-phase 1
+/gsd-execute-phase 1
+```
+
+---
+
+## Example (Notes App)
+
+### Phase 1: Notes Core
+
+| Requirement | Feature |
+| --- | --- |
+| NOTE-01 | Create note |
+| NOTE-02 | List notes |
+| VAL-01 | Validation |
+
+Each is implemented as a full-stack slice.
+
+---
+
+## Benefits
+
+- Faster feedback loops
+- No frontend/backend mismatch
+- Easier reviews (complete features)
+- Reduced rework
+- Better scalability
+
+---
+
+## Summary
+
+This modification transforms GSD into a:
+
+> **Spec-driven, feature-sliced development system**
+
+while preserving:
+
+- Phase-based planning
+- Requirement traceability
+- Structured execution
+
+---
+
+## Status
+
+- Feature slicing integrated into planning
+- Phase-based orchestration retained
+- Compatible with existing GSD commands
+
+---
+
+## Future Improvements
+
+- `/gsd-execute-feature <ID>` command
+- Stronger enforcement of feature completion
+- Automated validation of feature slices
+
+---
+
+*Modified GSD workflow for practical full-stack development.*
+
+---
+
 ## How It Works
 
 > **Already have code?** Run `/gsd:map-codebase` first. It spawns parallel agents to analyze your stack, architecture, conventions, and concerns. Then `/gsd:new-project` knows your codebase — questions focus on what you're adding, and planning automatically loads your patterns.

@@ -20,6 +20,8 @@ Validate phase exists in roadmap. If not found: report error with available phas
 Load CONTEXT.md if it exists. This contains user decisions that constrain planning.
 
 If no CONTEXT.md exists: proceed without — plan using research and requirements only. In headless mode, there is no interactive discuss-phase; context comes from prior artifacts or is skipped.
+
+Read workflow mode from config (`workflow.workflow_mode`, default `feature-sliced`) and apply it when creating plans.
 </step>
 
 <step name="handle_research">
@@ -40,6 +42,8 @@ Execute planning with the planner agent definition. Provide:
 - Phase requirement IDs (every ID must appear in a plan's requirements field)
 
 The planner creates PLAN.md files with task breakdown, dependency analysis, and verification criteria.
+Default to feature-sliced plans that are end-to-end usable (backend + database + UI + integration + end-to-end test).
+For extension phases, require reuse of existing routes/tables/handlers/services and only extend behavior with pluggable components.
 </step>
 
 <step name="handle_planner_return">
@@ -71,6 +75,7 @@ After plans pass the checker (or checker is skipped), verify all phase requireme
 1. Extract requirement IDs claimed by plans
 2. Compare against phase requirements from roadmap
 3. If gaps found: log as warning, continue (headless mode does not block for coverage gaps)
+4. Verify plan acceptance criteria include usability checks: API works, UI connected, data persists, feature usable
 </step>
 
 </process>
@@ -81,4 +86,5 @@ After plans pass the checker (or checker is skipped), verify all phase requireme
 - PLAN.md file(s) created with valid structure
 - Plan checker passed (or issues logged)
 - Requirements coverage verified
+- Plans are feature-sliced by default or strict extensions of existing pipelines
 </success_criteria>

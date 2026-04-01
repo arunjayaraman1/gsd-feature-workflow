@@ -190,6 +190,28 @@ This phase covers:
     assert.strictEqual(output2.goal, 'Colon outside bold format', 'colon-outside-bold goal extracted');
   });
 
+  test('ignores optional Phase Type metadata in detail sections', () => {
+    fs.writeFileSync(
+      path.join(tmpDir, '.planning', 'ROADMAP.md'),
+      `# Roadmap
+
+### Phase 3: Chat
+**Goal**: Build chat capability
+**Phase Type**: Extension
+**Depends on**: Phase 2
+**Plans**: 2 plans
+`
+    );
+
+    const result = runGsdTools('roadmap get-phase 3', tmpDir);
+    assert.ok(result.success, `Command failed: ${result.error}`);
+
+    const output = JSON.parse(result.output);
+    assert.strictEqual(output.found, true, 'phase should be found');
+    assert.strictEqual(output.goal, 'Build chat capability', 'goal extraction should be unaffected');
+    assert.ok(output.section.includes('**Phase Type**: Extension'), 'section should retain phase type metadata');
+  });
+
   test('detects malformed ROADMAP with summary list but no detail sections', () => {
     fs.writeFileSync(
       path.join(tmpDir, '.planning', 'ROADMAP.md'),

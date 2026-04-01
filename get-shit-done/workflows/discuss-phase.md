@@ -66,6 +66,24 @@ For now, let's focus on [phase domain]."
 Capture the idea in a "Deferred Ideas" section. Don't lose it, don't act on it.
 </scope_guardrail>
 
+<feature_sliced_guardrail>
+**CRITICAL: Capture implementation shape as feature slices by default.**
+
+Workflow mode source: `workflow.workflow_mode` from config (`feature-sliced` default, `default` for legacy behavior).
+
+When discussing implementation decisions, anchor on end-to-end usability:
+- Backend/API behavior
+- Database/persistence behavior
+- UI behavior
+- Integration/wiring behavior
+- End-to-end validation behavior
+
+If the phase is an extension, capture how it extends the existing capability without duplication:
+- Which existing route/table/handler/service pipeline is reused
+- Which pluggable component is added or swapped (stub, retrieval+LLM, refusal layer, etc.)
+- Confirmation that no duplicate system is created
+</feature_sliced_guardrail>
+
 <gray_area_identification>
 Gray areas are **implementation decisions the user cares about** — things that could go multiple ways and would change the result.
 

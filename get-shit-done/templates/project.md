@@ -55,6 +55,9 @@ One sentence that drives prioritization when tradeoffs arise.]
 
 Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Performance, Security
 
+Recommended additional type for this workflow:
+- Workflow architecture (feature-sliced execution, extension strategy, single-pipeline reuse)
+
 ## Key Decisions
 
 <!-- Decisions that constrain future work. Add throughout project lifecycle. -->
@@ -108,6 +111,10 @@ Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Perform
 - Hard limits on implementation choices
 - Tech stack, timeline, budget, compatibility, dependencies
 - Include the "why" — constraints without rationale get questioned
+- Include workflow constraints when relevant:
+  - Build features end-to-end by default (backend + database + UI + integration + end-to-end validation)
+  - Extension phases must extend existing pipelines, not rebuild them
+  - Shared pipelines (routes/services/tables) must not be duplicated across phases
 
 **Key Decisions:**
 - Significant choices that affect future work

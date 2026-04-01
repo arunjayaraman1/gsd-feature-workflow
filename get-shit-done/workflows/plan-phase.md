@@ -195,6 +195,7 @@ If `context_path` is not null, display: `Using phase context from: ${context_pat
 Read discuss mode for context gate label:
 ```bash
 DISCUSS_MODE=$(node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" config-get workflow.discuss_mode 2>/dev/null || echo "discuss")
+WORKFLOW_MODE=$(node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" config-get workflow.workflow_mode 2>/dev/null || echo "feature-sliced")
 ```
 
 If `TEXT_MODE` is true, present as a plain-text numbered list:
@@ -477,6 +478,7 @@ Planner prompt:
 <planning_context>
 **Phase:** {phase_number}
 **Mode:** {standard | gap_closure | reviews}
+**Workflow mode:** {workflow_mode}  <!-- Read from config key `workflow.workflow_mode`; default `feature-sliced` -->
 
 <files_to_read>
 - {state_path} (Project State)
@@ -504,6 +506,8 @@ Output consumed by /gsd:execute-phase. Plans need:
 - Tasks in XML format with read_first and acceptance_criteria fields (MANDATORY on every task)
 - Verification criteria
 - must_haves for goal-backward verification
+- Feature-sliced output by default (backend + database + UI + integration + end-to-end test in each feature plan)
+- Extension phases must reuse existing routes/tables/handlers/services (no duplicate pipelines)
 </downstream_consumer>
 
 <deep_work_rules>
@@ -545,6 +549,9 @@ Every task MUST include these fields — they are NOT optional:
 - [ ] Dependencies correctly identified
 - [ ] Waves assigned for parallel execution
 - [ ] must_haves derived from phase goal
+- [ ] Each feature plan includes backend + database + UI + integration + end-to-end test coverage (unless strict extension phase)
+- [ ] Extension phases reuse existing route/table/handler/service pipeline (no duplicate systems)
+- [ ] Acceptance criteria prove usability: API works, UI connected, data persists, feature usable
 </quality_gate>
 ```
 

@@ -57,6 +57,7 @@ describe('config-ensure-section command', () => {
     assert.strictEqual(typeof config.workflow.plan_check, 'boolean');
     assert.strictEqual(typeof config.workflow.verifier, 'boolean');
     assert.strictEqual(typeof config.workflow.nyquist_validation, 'boolean');
+    assert.strictEqual(typeof config.workflow.workflow_mode, 'string');
     // These hardcoded defaults are always present (may be overridden by user defaults)
     assert.ok('model_profile' in config, 'model_profile should exist');
     assert.ok('brave_search' in config, 'brave_search should exist');
@@ -380,6 +381,7 @@ describe('config-new-project command', () => {
     assert.strictEqual(config.workflow.node_repair_budget, 2);
     assert.strictEqual(config.workflow.ui_phase, true);
     assert.strictEqual(config.workflow.ui_safety_gate, true);
+    assert.strictEqual(config.workflow.workflow_mode, 'feature-sliced');
 
     // hooks section present
     assert.ok(config.hooks && typeof config.hooks === 'object', 'hooks section should exist');
@@ -431,6 +433,7 @@ describe('config-new-project command', () => {
     assert.strictEqual(config.workflow.node_repair_budget, 2);
     assert.strictEqual(config.workflow.ui_phase, true);
     assert.strictEqual(config.workflow.ui_safety_gate, true);
+    assert.strictEqual(config.workflow.workflow_mode, 'feature-sliced');
     assert.ok(config.hooks && typeof config.hooks === 'object');
     assert.strictEqual(config.hooks.context_warnings, true);
   });
@@ -514,6 +517,14 @@ describe('config-set research_before_questions and discuss_mode', () => {
     assert.strictEqual(config.workflow.discuss_mode, 'assumptions');
   });
 
+  test('workflow.workflow_mode is a valid config key', () => {
+    const result = runGsdTools('config-set workflow.workflow_mode default', tmpDir);
+    assert.ok(result.success, `Command failed: ${result.error}`);
+
+    const config = readConfig(tmpDir);
+    assert.strictEqual(config.workflow.workflow_mode, 'default');
+  });
+
   test('research_before_questions defaults to false in new configs', () => {
     const config = readConfig(tmpDir);
     assert.strictEqual(config.workflow.research_before_questions, false);
@@ -522,6 +533,11 @@ describe('config-set research_before_questions and discuss_mode', () => {
   test('discuss_mode defaults to discuss in new configs', () => {
     const config = readConfig(tmpDir);
     assert.strictEqual(config.workflow.discuss_mode, 'discuss');
+  });
+
+  test('workflow_mode defaults to feature-sliced in new configs', () => {
+    const config = readConfig(tmpDir);
+    assert.strictEqual(config.workflow.workflow_mode, 'feature-sliced');
   });
 
   test('hooks.research_questions is rejected with suggestion', () => {

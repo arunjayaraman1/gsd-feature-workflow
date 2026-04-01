@@ -81,7 +81,14 @@ For each task, record: needs (prerequisites), creates (outputs), has_checkpoint 
 
 **Wave analysis:** Independent roots = Wave 1. Depends only on Wave 1 = Wave 2. And so on.
 
-**Prefer vertical slices** (model + API + UI per feature) over horizontal layers (all models, then all APIs).
+**Default to feature slices** where each feature is end-to-end usable:
+- Backend (API/service)
+- Database (schema/table/persistence)
+- UI (component/screen)
+- Integration (UI wired to API)
+- Test (end-to-end validation)
+
+Use horizontal layers only when `workflow_mode=default`.
 </dependency_graph>
 
 <goal_backward>
@@ -178,7 +185,7 @@ For each task: what does it NEED, what does it CREATE, can it run independently?
 </step>
 
 <step name="build_dependency_graph">
-Map dependencies. Identify parallelization opportunities. Prefer vertical slices.
+Map dependencies. Identify parallelization opportunities. Default to feature-sliced plans that are end-to-end usable. Use extension phases to evolve existing pipelines rather than duplicating handlers/routes/tables.
 </step>
 
 <step name="assign_waves">
@@ -210,5 +217,7 @@ Return planning outcome: phase name, plan count, wave structure, plans created w
 - Each plan: depends_on, files_modified, autonomous, must_haves in frontmatter
 - Each task: Files, Action, Verify, Done
 - Wave structure maximizes parallelism
+- Plans default to feature slices with backend+database+UI+integration+test coverage
+- Extension plans reuse existing pipelines (no duplicate systems)
 - Results returned
 </success_criteria>
